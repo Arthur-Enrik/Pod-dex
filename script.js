@@ -47,7 +47,7 @@ async function SequentialShowPokemons(btn) {
     let ID = display_id.textContent;
 
     //Condições
-    if (btn === 'Next') {
+    if (btn === 'Next' && ID < 1025) {
 
         display_name.innerHTML = 'Loading...';
         ID++;
@@ -57,7 +57,7 @@ async function SequentialShowPokemons(btn) {
         display_name.innerHTML = Data.name;
         display_img.src = `${url_img}${Data.id}.gif`;
 
-    } else if (ID > 1) {
+    } else if (btn === 'Prev' && ID > 1) {
         display_name.innerHTML = 'Loading...';
         ID--;
         const Data = await ApiRequest(ID);
