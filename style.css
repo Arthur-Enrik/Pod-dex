@@ -24,7 +24,7 @@ main {
     bottom: 50%;
     right: 40%;
     transform: translate(-15%, 0);
-    width: 18%;
+    width: 23%;
 }
 .pokemon_infos {
     position: absolute;
