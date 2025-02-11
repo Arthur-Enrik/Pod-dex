@@ -35,28 +35,33 @@ async function UpdateInfoPokemon(Input) {
         display_id.innerHTML = Data.id;
         display_name.innerHTML = Data.name;
         display_img.src = `${url_img}${Data.id}.gif`;
+        input.value = '';
     }
 }
 //Função para os botões
 async function SequentialShowPokemons(btn) {
     ButtonCooldown()
+    input.value = '';
 
     //Variaveis local
     let ID = display_id.textContent;
 
     //Condições
     if (btn === 'Next') {
-        display_name.innerHTML = 'Loading...'
+
+        display_name.innerHTML = 'Loading...';
         ID++;
         const Data = await ApiRequest(ID);
+
         display_id.innerHTML = Data.id;
         display_name.innerHTML = Data.name;
         display_img.src = `${url_img}${Data.id}.gif`;
 
     } else if (ID > 1) {
-        display_name.innerHTML = 'Loading...'
+        display_name.innerHTML = 'Loading...';
         ID--;
         const Data = await ApiRequest(ID);
+
         display_id.innerHTML = Data.id;
         display_name.innerHTML = Data.name;
         display_img.src = `${url_img}${Data.id}.gif`;
@@ -68,7 +73,7 @@ async function SequentialShowPokemons(btn) {
 
         BtnNext.disabled = true;
         BtnPrev.disabled = true;
-        let cooldown = 1
+        let cooldown = 0.5
 
         setTimeout(() => {
             BtnNext.disabled = false;
