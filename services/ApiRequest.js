@@ -6,6 +6,6 @@ export async function ApiRequest(pokemon_name_or_id) {
         return result
    } else {
         console.error('Nome Incorreto ou Erro de Conecção')
-        return 'Not Found'
+        return 'erro'
    }
  }

@@ -1,79 +1,57 @@
 //Importa os modulos
-import { ApiRequest } from "./services/ApiRequest.js";
-
-//Valores fixos
-const url_img = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/';
+import {ApiRequest} from "./services/ApiRequest.js";
+import {Render} from "./services/RenderResults.js";
 
 //Selecionando os Elementos HTML
 const input = document.querySelector('input.input_search');
 const BtnNext = document.querySelector('button.btn_next');
 const BtnPrev = document.querySelector('button.btn_prev');
 const form = document.querySelector('.form');
-//Elementos de display
-const display_img = document.querySelector('img.pokemon_image');
-const display_id = document.querySelector('.pokemon_id');
-const display_name = document.querySelector('.pokemon_name');
 
 //Eventos
-BtnNext.addEventListener('click', function(){SequentialShowPokemons('Next')});
-BtnPrev.addEventListener('click', function(){SequentialShowPokemons('Prev')});
+BtnNext.addEventListener('click', function(){ButtonsInfos('Next')});
+BtnPrev.addEventListener('click', function(){ButtonsInfos('Prev')});
 form.addEventListener('submit', function(event) {event.preventDefault();});
-input.addEventListener('keydown', function(event) {if(event.key === 'Enter'){if(input.value !== ''){UpdateInfoPokemon()};};});
-window.onload = function(){UpdateInfoPokemon(1)};
+input.addEventListener('keydown', function(event) {if(event.key === 'Enter'){if(input.value !== ''){InputInfos()};};});
+window.onload = function(){InputInfos(1)};
+
+//Variaveis Global
+let ID
+
 
 //Função para o input
-async function UpdateInfoPokemon(Input) {
-    display_name.innerHTML = 'Loading...';
-    display_id.innerHTML = '0';
-    //Faz requisição do modulo
+async function InputInfos(Input) {
+    //Exibe uma mensagem de carregamento
+    Render();
+    
+    //Faz requisição no modulo
     const Data = await ApiRequest(input.value.toLowerCase() || Input);
-
-    //Codição que verifica que Data não veio com Not Found
-    if (Data === 'Not Found') {
-        display_name.innerHTML = 'Não Encontrado!';
-    } else {
-        display_id.innerHTML = Data.id;
-        display_name.innerHTML = Data.name;
-        display_img.src = `${url_img}${Data.id}.gif`;
-        input.value = '';
-    }
+    ID = Data.id || 0;
+    
+    //Chama a função para exibir os valores
+    Render(Data);
 }
 //Função para os botões
-async function SequentialShowPokemons(btn) {
-    ButtonCooldown()
-    input.value = '';
-
-    //Variaveis local
-    let ID = display_id.textContent;
+async function ButtonsInfos(btn) {
+    ButtonCooldown();
+    Render();
 
     //Condições
     if (btn === 'Next' && ID < 1025) {
-
-        display_name.innerHTML = 'Loading...';
         ID++;
-        const Data = await ApiRequest(ID);
-
-        display_id.innerHTML = Data.id;
-        display_name.innerHTML = Data.name;
-        display_img.src = `${url_img}${Data.id}.gif`;
-
     } else if (btn === 'Prev' && ID > 1) {
-        display_name.innerHTML = 'Loading...';
         ID--;
-        const Data = await ApiRequest(ID);
-
-        display_id.innerHTML = Data.id;
-        display_name.innerHTML = Data.name;
-        display_img.src = `${url_img}${Data.id}.gif`;
     } 
+    const Data = await ApiRequest(ID);
+    Render(Data);
 }
 
-//função para desabilitar temporariamente o botão
+//função para desabilitar temporariamente o botão para evitar bugs
  function ButtonCooldown() {
 
         BtnNext.disabled = true;
         BtnPrev.disabled = true;
-        let cooldown = 0.5
+        const cooldown = 0.5
 
         setTimeout(() => {
             BtnNext.disabled = false;
